@@ -15,7 +15,6 @@ from src.config import proxy
 from src.utils.Logger import Logger
 
 default_method = "chat4"
-os.environ['FLASK_ENV'] = 'production'
 
 app = Flask(__name__)
 random.seed(int(time.time()))
@@ -124,4 +123,5 @@ def get_proxy_session():
     return proxy
 
 
-app.run(host='0.0.0.0', port=5006)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5008)
