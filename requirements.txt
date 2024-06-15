@@ -6,4 +6,4 @@ mmh3
 fake_useragent
 funcaptcha_challenger
 python-dotenv
-fastapi
+flask
