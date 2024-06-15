@@ -7,3 +7,4 @@ fake_useragent
 flask
 funcaptcha_challenger
 python-dotenv
+fastapi
