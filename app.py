@@ -5,7 +5,8 @@ import time
 from io import BytesIO
 
 from PIL import Image
-from flask import Flask, request, Response, jsonify
+from fastapi import FastAPI, Request, Response
+from fastapi.responses import JSONResponse
 from funcaptcha_challenger import predict
 
 from src.arkose.challenge import Challenge
@@ -13,9 +14,7 @@ from src.arkose.session import FunCaptchaSession
 from src.config import proxy
 from src.utils.Logger import Logger
 
-default_method = "chat4"
-
-app = Flask(__name__)
+app = FastAPI()
 random.seed(int(time.time()))
 
 support_predict_list = ["3d_rollball_objects", "3d_rollball_animals", "counting", "card", "cardistance",
@@ -24,21 +23,24 @@ support_predict_list = ["3d_rollball_objects", "3d_rollball_animals", "counting"
 need_to_solve_list = []
 session_time = 3600
 proxy_time = int(session_time / 60 + 5)
+default_method = "chat4"
 
 
-@app.route('/token', methods=['GET', 'POST'])
-def image_solver():
+@app.post("/token")
+@app.get("/token")
+async def image_solver(request: Request):
     if request.method == 'POST':
-        method = request.get_json().get("method", default_method)
-        proxy = request.get_json().get("proxy", get_proxy_session())
-        blob = request.get_json().get("blob", None)
+        body = await request.json()
+        method = body.get("method", default_method)
+        proxy = body.get("proxy", get_proxy_session())
+        blob = body.get("blob", None)
     else:
-        method = request.args.get('method', default_method)
-        proxy = request.args.get("proxy", get_proxy_session())
-        blob = request.args.get('blob', None)
+        method = request.query_params.get('method', default_method)
+        proxy = request.query_params.get("proxy", get_proxy_session())
+        blob = request.query_params.get('blob', None)
 
     if not method:
-        return jsonify({"error": "method is required."}), 400
+        return JSONResponse(content={"error": "method is required."}, status_code=400)
 
     fun = FunCaptchaSession(method=method, blob=blob)
     ch = Challenge(fun, proxy=proxy, timeout=30)
@@ -57,7 +59,7 @@ def image_solver():
                 "proxy": proxy,
             }
             Logger.info(json.dumps(result))
-            return Response(json.dumps(result), content_type='application/json')
+            return JSONResponse(content=result)
 
         game = ch.get_challenge_game(arkose_token)
 
@@ -102,7 +104,7 @@ def image_solver():
             "proxy": proxy,
         }
         Logger.info(json.dumps(result))
-        return Response(json.dumps(result), content_type='application/json')
+        return JSONResponse(content=result)
 
     except Exception as e:
         result = {
@@ -115,9 +117,10 @@ def image_solver():
             "proxy": proxy,
         }
         Logger.error(str(result))
-        return Response(json.dumps(result), content_type='application/json', status=500)
+        return JSONResponse(content=result, status_code=500)
 
 
 def get_proxy_session():
     return proxy
+
 
