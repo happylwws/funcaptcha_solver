@@ -6,3 +6,4 @@ fake_useragent
 funcaptcha_challenger
 python-dotenv
 flask
+numpy
