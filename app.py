@@ -3,6 +3,7 @@ import json
 import random
 import time
 from io import BytesIO
+import os
 
 from PIL import Image
 from flask import Flask, request, Response, jsonify
