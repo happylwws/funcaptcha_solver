@@ -12,7 +12,6 @@
       "dest": "app.py"
     }
   ],
-  {
   "scripts": {
     "start": "./start.sh"
   }
