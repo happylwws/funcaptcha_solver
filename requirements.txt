@@ -1,0 +1,9 @@
+numpy
+pillow
+curl_cffi
+cryptography
+mmh3
+fake_useragent
+flask
+funcaptcha_challenger
+python-dotenv
