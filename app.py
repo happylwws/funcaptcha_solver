@@ -14,6 +14,7 @@ from src.config import proxy
 from src.utils.Logger import Logger
 
 default_method = "chat4"
+os.environ['FLASK_ENV'] = 'production'
 
 app = Flask(__name__)
 random.seed(int(time.time()))
