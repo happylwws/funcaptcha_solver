@@ -7,4 +7,5 @@ funcaptcha_challenger
 python-dotenv
 flask
 numpy
+gunicorn
 
