@@ -6,6 +6,6 @@ fake_useragent
 funcaptcha_challenger
 python-dotenv
 flask
-numpy
+numpy<2.0
 gunicorn
 
